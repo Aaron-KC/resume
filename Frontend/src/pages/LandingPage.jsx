@@ -1,26 +1,43 @@
 import { useState } from 'react'
 import Modal from '../components/Modal';
 import Login from '../components/Login';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { userContext } from '../context/userContext';
+import SignUp from '../components/Signup';
+import ProfileIconCard from '../components/ProfileIconCard';
 
 
 const LandingPage = () => {
   const [openAuth, setOpenAuth] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const { user="" } = useContext(userContext);
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    if (user) {
+      navigate('/dashboard')
+    } else {
+      setOpenAuth(true);
+    }
+  }
 
   return (
     <div className='px-20 py-5'>
       <div className='flex justify-between items-center'>
         <span className='font-bold text-lg'>Resume builder</span>
-        <button className='btn1' onClick={() => setOpenAuth(true)}>Login / Sign Up</button>
+        {
+          user ? <ProfileIconCard user={user} /> : <button className='btn1' onClick={() => setOpenAuth(true)}>Login / Sign Up</button>
+        }
       </div>
 
       <div className='flex pt-18 flex-col md:flex-row gap-x-7'>
         <div className='flex flex-col gap-7 md:w-1/2 justify-center'>
-          <p className='text-5xl font-bold leading-16'>Build Your <span className='text-radial-animate'>Resume <br /> Effortlessly
+          <p className='text-5xl font-bold leading-16'>Build Your <span className=''>Resume <br /> Effortlessly
           </span>
           </p>
           <span>Craft a standout resume in minutes with our smart and intuitive resume <br /> builder.</span>
-          <button className='btn2 w-fit'>Get started</button>
+          <button className='btn2 w-fit' onClick={handleStart}>Get started</button>
         </div>
         <div className='w-full md:w-1/2 py-8 md:py-0 h-87.5'>
           <img src="/landingP.png" className='w-full h-full object-cover object-center' />

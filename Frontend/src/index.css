@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 * {
@@ -17,6 +18,23 @@
     background-color: #fcfbfc;
   }
 }
+
+@media print {
+  body {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .print-container {
+    width: 794px; 
+  }
+
+  @page {
+    margin: 0;
+  }
+}
+
 
 .text-radial-animate {
   background: radial-gradient(circle at center, #7182ff 0%, #3cff52 100%);
@@ -51,4 +69,13 @@
 }
 .eye-icon {
   @apply absolute right-3 top-4 text-xl cursor-pointer;
+}
+/* .resume-btn {
+  @apply inline-flex items-center gap-2 bg-purple-100 text-purple-700 text-sm px-4 py-2 rounded-md hover:bg-purple-200 font-semibold cursor-pointer;
+} */
+.template-btn {
+  @apply inline-flex items-center gap-2 text-purple-700 text-sm px-4 py-2 rounded-md hover:bg-purple-200 font-semibold cursor-pointer;
+}
+.template-btn-underlined {
+  @apply inline-flex items-center gap-2 text-purple-700 text-sm px-2 py-2 border-b border-b-purple-700 font-semibold cursor-pointer;
 }
