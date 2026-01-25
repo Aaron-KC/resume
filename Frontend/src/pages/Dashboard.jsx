@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
+import Navbar from '../components/Navbar'
 import { userContext } from '../context/userContext'
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { axiosInstance } from '../utils/axiosInstance';
-import { API_PATHS } from '../utils/apiPaths';
+import { axiosInstance } from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 import ResumeCard from '../components/ResumeCard';
 import Modal from '../components/Modal'
 import CreateResume from '../components/CreateResume';
@@ -13,7 +14,7 @@ const Dashboard = () => {
   const { user, loading } = useContext(userContext)
   const [allResumes, setAllResumes] = useState([])
   const navigate = useNavigate();
-  console.log(user);
+
   if(!user && !loading) {
     navigate('/')
   }

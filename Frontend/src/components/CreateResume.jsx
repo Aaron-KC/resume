@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import Input from './Input'
 import { RxCross1 } from 'react-icons/rx'
-import { axiosInstance } from '../utils/axiosInstance'
-import { API_PATHS } from '../utils/apiPaths'
+import { axiosInstance } from '../../utils/axiosInstance'
+import { API_PATHS } from '../../utils/apiPaths'
+import toast from 'react-hot-toast'
 
 const CreateResume = ({ open, navigate, create, oldTitle, handleString }) => {
   const [title, setTitle] = useState(create ? "" : oldTitle)
@@ -22,6 +23,7 @@ const CreateResume = ({ open, navigate, create, oldTitle, handleString }) => {
   
         if (res.data) {
           if (res.data._id) {
+            toast.success('Resume Created Successfully!')
             navigate(`/resume/${res.data._id}`)
           }
         }
@@ -30,7 +32,6 @@ const CreateResume = ({ open, navigate, create, oldTitle, handleString }) => {
         open(false);
       }
     } catch (err) {
-      console.log(err)
       if (err.response && err.response.data) {
         setErr(err.response.data.message);
       } else {

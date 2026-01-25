@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import Input from './Input'
-import { axiosInstance } from '../utils/axiosInstance'
-import { API_PATHS } from '../utils/apiPaths';
-import { validateCredentials } from '../utils/validateCredentials';
+import { LuTrash, LuUser } from "react-icons/lu";
+import { LuUpload } from "react-icons/lu";
+import { axiosInstance } from '../../utils/axiosInstance'
+import { API_PATHS } from '../../utils/apiPaths';
+import { validateCredentials } from '../../utils/validateCredentials';
+import toast from 'react-hot-toast'
 import ProfileImage from './ProfileImage';
 
 
@@ -29,7 +32,6 @@ const SignUp = ({ open, mode }) => {
     }
     console.log(file)
   }
-  
 
   const handleSignUp = async () => {
     try {
@@ -40,15 +42,19 @@ const SignUp = ({ open, mode }) => {
       setErr(result.message)
       return;
      }
-      // const formData = new FormData();
+      const formData = new FormData();
 
-      // for (let key in reg) {
-      //   formData.append(key, reg[key])
-      // }
-      // console.log(...formData);
-      const res = await axiosInstance.post(API_PATHS.AUTH.REGISTER, reg)
+      for (let key in reg) {
+        formData.append(key, reg[key])
+      }
+      const res = await axiosInstance.post(API_PATHS.AUTH.REGISTER, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
 
       if (res.data) {
+        toast.success(res.data.message)
         mode('login')
       }
     } catch (err) {

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
 import { useNavigate, useParams } from 'react-router-dom'
-import { axiosInstance } from '../utils/axiosInstance';
-import { API_PATHS } from '../utils/apiPaths';
+import { axiosInstance } from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 import TitleBox from '../components/TitleBox';
 import PersonalInformation from '../components/PersonalInformation';
 import ProgressBar from '../components/ProgressBar';
@@ -15,8 +15,13 @@ import Certifications from '../components/Certifications';
 import AdditionalInfo from '../components/AdditionalInfo';
 import Modal from '../components/Modal';
 import CreateResume from '../components/CreateResume';
-import { getValidationErrors } from '../utils/validateForm';
+import { getValidationErrors } from '../../utils/validateForm';
 import TemplateOne from '../resumetemplate/TemplateOne';
+import toast from 'react-hot-toast'
+import { captureElement } from '../../utils/generatethumbnail';
+import { toBlob } from 'html-to-image';
+import ThemeSelector from '../components/ThemeSelector';
+import { themeColorPalette } from '../../utils/themes';
 import { userContext } from '../context/userContext';
 
 
@@ -209,11 +214,11 @@ const ResumeBuilder = () => {
   }
   console.log(images)
 
-  // useEffect(() => {
-  //   toBlob(thumbnailref.current, { quality: 0.8 }).then(blob => {
-  //     setImages({ ...images, thumbnailPic: blob })
-  //   })
-  // }, [thumbnailref.current, preview])
+  useEffect(() => {
+    toBlob(thumbnailref.current, { quality: 0.8 }).then(blob => {
+      setImages({ ...images, thumbnailPic: blob })
+    })
+  }, [thumbnailref.current, preview])
 
   const updateResume = async () => {
     let personalInformation = {
@@ -232,40 +237,40 @@ const ResumeBuilder = () => {
 
 
 
-    if (imagesToSend.profilePic || imagesToSend.thumbnailPic) {
-      const formData = new FormData()
-      let empty = false;
+    // if (imagesToSend.profilePic || imagesToSend.thumbnailPic) {
+    //   const formData = new FormData()
+    //   let empty = false;
 
-      for (let key in imagesToSend) {
-        if (images[key] === 'thumbnailPic') {
-          formData.append(key, imagesToSend[key], `image.png`)
-        } else {
-          if (!imagesToSend[key]) {
-            empty = true;
-          }
-          formData.append(key, imagesToSend[key])
-        }
-      }
+    //   for (let key in imagesToSend) {
+    //     if (images[key] === 'thumbnailPic') {
+    //       formData.append(key, imagesToSend[key], `image.png`)
+    //     } else {
+    //       if (!imagesToSend[key]) {
+    //         empty = true;
+    //       }
+    //       formData.append(key, imagesToSend[key])
+    //     }
+    //   }
 
-      console.log('images before sending', imagesToSend)
+    //   console.log('images before sending', imagesToSend)
 
-      const res = await axiosInstance.post(API_PATHS.RESUME.UPLOAD_RESUME_IMAGES + resumeId, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      console.log(res)
-      if (res.data) {
-        if (empty) {
-          personalInformation = { ...personalInformation, profileUrl: "", thumbnailUrl: res.data.personalInformation.thumbnailUrl }
-        } else {
-          personalInformation = { ...personalInformation, profileUrl: res.data.personalInformation.profileUrl, thumbnailUrl: res.data.personalInformation.thumbnailUrl }
-        }
-        toast.success('file uploaded successfully!')
-      } else {
-        toast.error('file couldnot be uploaded')
-      }
-    }
+    //   const res = await axiosInstance.post(API_PATHS.RESUME.UPLOAD_RESUME_IMAGES + resumeId, formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   })
+    //   console.log(res)
+    //   if (res.data) {
+    //     if (empty) {
+    //       personalInformation = { ...personalInformation, profileUrl: "", thumbnailUrl: res.data.personalInformation.thumbnailUrl }
+    //     } else {
+    //       personalInformation = { ...personalInformation, profileUrl: res.data.personalInformation.profileUrl, thumbnailUrl: res.data.personalInformation.thumbnailUrl }
+    //     }
+    //     toast.success('file uploaded successfully!')
+    //   } else {
+    //     toast.error('file couldnot be uploaded')
+    //   }
+    // }
 
     const res = await axiosInstance.put(API_PATHS.RESUME.UPDATE_RESUME + resumeId, { ...resume, personalInformation })
     if (res.data) {
@@ -360,9 +365,9 @@ const ResumeBuilder = () => {
         openModal && <Modal >
           <CreateResume open={setOpenModal} navigate={navigate} create={false} oldTitle={resume.title} handleString={handleString} />
         </Modal>
-      }
+      } */}
 
-      {
+      {/* {
         changeTheme && <Modal>
           <ThemeSelector open={setChangeTheme} handleTheme={handleTheme} templateId={template} setTemplate={setTemplate} palette={resume.theme.colorPalette} setIndex={setIndex} index={index} />
         </Modal>

@@ -1,21 +1,34 @@
 const User = require("../model/authModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 exports.register = async (req, res) => {
   try {
-    console.log("req.body", req.body);
     const { name, email, password } = req.body;
-    let profileUrl = "";
+    let profileUrl = null;
+
+    if (req.file) {
+      profileUrl = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`;
+    }
+
     let userExists = await User.findOne({ name });
 
     if (userExists) {
+      if (profileUrl) {
+        fs.unlink("uploads/" + req.file.filename, (e) => console.log(e));
+      }
       return res.status(500).json({ message: "Username already Exists!" });
     }
 
     userExists = await User.findOne({ email });
 
     if (userExists) {
+      if (profileUrl) {
+        fs.unlink("uploads/" + req.file.filename, (e) => console.log(e));
+      }
       return res.status(500).json({ message: "Email already Exists!" });
     }
 

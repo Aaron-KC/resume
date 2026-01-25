@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { axiosInstance } from "../utils/axiosInstance";
-import { API_PATHS } from "../utils/apiPaths";
+import { axiosInstance } from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
 export const userContext= createContext()
 
@@ -24,7 +24,7 @@ export const UserContextProvider = ({children}) => {
       if(res.data) {
         setUser(res.data)        
       }
-    } catch(err) {
+    } catch(e) {
       if(err.response && err.response.data) {
         console.error(err.response.data.message)
       } else {

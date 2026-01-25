@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import getImageAverageColor from '../utils/getColor';
+import getImageAverageColor from '../../utils/getColor';
 
 const ResumeCard = ({ resume }) => {
   const [bgColor, setBgColor] = useState('#fff');

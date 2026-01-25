@@ -1,5 +1,5 @@
-// import IMAGE_ONE from '../src/assets/IMG_2021.jpg'
-// import IMAGE_TWO from '../src/assets/thumbnailPic-1749403814704-297148024.png'
+import IMAGE_ONE from '../src/assets/IMG_2021.jpg'
+import IMAGE_TWO from '../src/assets/thumbnailPic-1749403814704-297148024.png'
 
 export const themeColorPalette = [
   // Blue Gray
@@ -67,10 +67,10 @@ export const themeColorPalette = [
 export const templates = [
   {
     id: '01',
-    // image: IMAGE_ONE
+    image: IMAGE_ONE
   }, {
     id: "02",
-    // image: IMAGE_TWO
+    image: IMAGE_TWO
   }
 
 ]

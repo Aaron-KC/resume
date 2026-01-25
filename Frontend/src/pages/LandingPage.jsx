@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Modal from '../components/Modal';
 import Login from '../components/Login';
-import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import SignUp from '../components/SignUp';
 import { userContext } from '../context/userContext';
-import SignUp from '../components/Signup';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import ProfileIconCard from '../components/ProfileIconCard';
 
 
 const LandingPage = () => {
   const [openAuth, setOpenAuth] = useState(false);
   const [authMode, setAuthMode] = useState("login");
-  const { user="" } = useContext(userContext);
+  const { user } = useContext(userContext);
   const navigate = useNavigate();
 
   const handleStart = () => {
@@ -33,13 +33,13 @@ const LandingPage = () => {
 
       <div className='flex pt-18 flex-col md:flex-row gap-x-7'>
         <div className='flex flex-col gap-7 md:w-1/2 justify-center'>
-          <p className='text-5xl font-bold leading-16'>Build Your <span className=''>Resume <br /> Effortlessly
+          <p className='text-5xl font-bold leading-16'>Build Your <span className='text-radial-animate'>Resume <br /> Effortlessly
           </span>
           </p>
           <span>Craft a standout resume in minutes with our smart and intuitive resume <br /> builder.</span>
           <button className='btn2 w-fit' onClick={handleStart}>Get started</button>
         </div>
-        <div className='w-full md:w-1/2 py-8 md:py-0 h-87.5'>
+        <div className='w-full md:w-1/2 py-8 md:py-0 h-[350px]'>
           <img src="/landingP.png" className='w-full h-full object-cover object-center' />
         </div>
       </div>

@@ -1,5 +1,6 @@
+import React from 'react'
 import Resume from './Resume'
-import { templates } from '../utils/themes'
+import { templates } from '../../utils/themes'
 import Resume2 from './Resume2'
 
 

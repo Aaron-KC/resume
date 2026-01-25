@@ -9,16 +9,16 @@ const resumeRouter = require("./route/resumeRoute");
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    // origin: "http://localhost:5173", 
-    // methods: ["GET", "POST", "PUT", "DELETE"], 
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
   })
 );
 
+app.use("/uploads", express.static("uploads"));
+
 app.use("/api/auth", authRouter);
 app.use("/api/resume", resumeRouter);
-
 
 app.listen(port, () => console.log("SERVER CONNECTED AT PORT " + port));
