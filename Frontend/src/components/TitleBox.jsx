@@ -24,11 +24,11 @@ const TitleBox = ({ title, handleString, open, id, navigate, ref }) => {
   }
 
   const handleResumeDelete = async () => {
-    // const res = await axiosInstance.delete(API_PATHS.RESUME.DELETE_RESUME + id)
-    // if(res.data) {
-    //   toast.success(res.data.message)
-    //   navigate('/dashboard')
-    // }
+    const res = await axiosInstance.delete(API_PATHS.RESUME.DELETE_RESUME + id)
+    if(res.data) {
+      toast.success(res.data.message)
+      navigate('/dashboard')
+    }
   }
 
   return (

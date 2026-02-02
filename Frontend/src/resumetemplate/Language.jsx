@@ -9,7 +9,7 @@ const Language = ({info, select, unselect}) => {
         </span>
       </div>
       {
-        info.proficiency &&  <div className='flex gap-1'>{
+        info.proficiency > 0 &&  <div className='flex gap-1'>{
           Array.from({length: 5}, (_, i) => i + 1).map(item => {
             return <div className='h-[15px] w-[15px] rounded-full' style={{backgroundColor: item <= info.proficiency ? select: unselect}}></div>
           })

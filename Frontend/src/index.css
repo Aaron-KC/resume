@@ -36,7 +36,7 @@
 }
 
 
-/* .text-radial-animate {
+.text-radial-animate {
   background: radial-gradient(circle at center, #7182ff 0%, #3cff52 100%);
   background-size: 200% 200%;
   background-clip: text;
@@ -56,14 +56,14 @@
   100% {
     background-position: 50% 50%;
   }
-} */
+}
 
-/* .btn1 {
+.btn1 {
   @apply bg-purple-100 px-4 py-2 font-bold text-sm cursor-pointer hover:bg-black hover:text-white transition-colors duration-300 rounded-md;
 }
 .btn2 {
   @apply bg-black px-4 py-2 font-bold text-sm cursor-pointer hover:bg-purple-100 text-white hover:text-black transition-colors duration-300 rounded-md;
-} */
+}
 .inputs {
   @apply w-full p-3 rounded-lg border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm;
 }

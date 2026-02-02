@@ -39,6 +39,7 @@ const resumeSchema = new mongoose.Schema({
       startDate: Date,
       endDate: Date,
       description: String,
+      currentlyWorking: {type: Boolean, default: false}
     },
   ],
   education: [
@@ -47,6 +48,7 @@ const resumeSchema = new mongoose.Schema({
       institution: String,
       startDate: Date,
       endDate: Date,
+      currentlyStudying: {type: Boolean, default: false}
     },
   ],
   skills: [

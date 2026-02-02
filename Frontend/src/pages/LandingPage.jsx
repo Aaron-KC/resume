@@ -25,7 +25,7 @@ const LandingPage = () => {
   return (
     <div className='px-20 py-5'>
       <div className='flex justify-between items-center'>
-        <span className='font-bold text-lg'>Resume builder</span>
+        <span className='font-bold text-lg'>ResumeForge</span>
         {
           user ? <ProfileIconCard user={user} /> : <button className='btn1' onClick={() => setOpenAuth(true)}>Login / Sign Up</button>
         }

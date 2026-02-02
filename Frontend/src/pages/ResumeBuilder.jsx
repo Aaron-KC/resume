@@ -31,7 +31,7 @@ const ResumeBuilder = () => {
   const [resume, setResume] = useState({
     personalInformation: {
       profileUrl: "",
-     fullName: "", 
+      fullName: "",
       description: "",
       summary: "",
       thumbnailUrl: ""
@@ -55,6 +55,7 @@ const ResumeBuilder = () => {
         startDate: "",
         endDate: "",
         description: "",
+        currentlyWorking: false,
       },
     ],
     education: [
@@ -63,6 +64,7 @@ const ResumeBuilder = () => {
         institution: "",
         startDate: "",
         endDate: "",
+        currentlyStudying: false,
       },
     ],
     skills: [
@@ -106,11 +108,11 @@ const ResumeBuilder = () => {
   const [index, setIndex] = useState(-1)
   const [template, setTemplate] = useState('')
   const [progress, setProgress] = useState(0)
-  const {user, loading} = useContext(userContext)
+  const { user, loading } = useContext(userContext)
 
   console.log(resume)
 
-  if(!user && !loading) {
+  if (!user && !loading) {
     navigate('/')
   }
 
@@ -121,7 +123,7 @@ const ResumeBuilder = () => {
       const res = await axiosInstance.get(API_PATHS.RESUME.GET_RESUME_BY_ID + resumeId)
       if (res.data) {
         setResume(res.data)
-        if(res.data.theme.template.length > 0) {
+        if (res.data.theme.template.length > 0) {
           setTemplate(res.data.theme.template[0].id)
         }
       }
@@ -237,40 +239,40 @@ const ResumeBuilder = () => {
 
 
 
-    // if (imagesToSend.profilePic || imagesToSend.thumbnailPic) {
-    //   const formData = new FormData()
-    //   let empty = false;
+    if (imagesToSend.profilePic || imagesToSend.thumbnailPic) {
+      const formData = new FormData()
+      let empty = false;
 
-    //   for (let key in imagesToSend) {
-    //     if (images[key] === 'thumbnailPic') {
-    //       formData.append(key, imagesToSend[key], `image.png`)
-    //     } else {
-    //       if (!imagesToSend[key]) {
-    //         empty = true;
-    //       }
-    //       formData.append(key, imagesToSend[key])
-    //     }
-    //   }
+      for (let key in imagesToSend) {
+        if (images[key] === 'thumbnailPic') {
+          formData.append(key, imagesToSend[key], `image.png`)
+        } else {
+          if (!imagesToSend[key]) {
+            empty = true;
+          }
+          formData.append(key, imagesToSend[key])
+        }
+      }
 
-    //   console.log('images before sending', imagesToSend)
+      console.log('images before sending', imagesToSend)
 
-    //   const res = await axiosInstance.post(API_PATHS.RESUME.UPLOAD_RESUME_IMAGES + resumeId, formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   })
-    //   console.log(res)
-    //   if (res.data) {
-    //     if (empty) {
-    //       personalInformation = { ...personalInformation, profileUrl: "", thumbnailUrl: res.data.personalInformation.thumbnailUrl }
-    //     } else {
-    //       personalInformation = { ...personalInformation, profileUrl: res.data.personalInformation.profileUrl, thumbnailUrl: res.data.personalInformation.thumbnailUrl }
-    //     }
-    //     toast.success('file uploaded successfully!')
-    //   } else {
-    //     toast.error('file couldnot be uploaded')
-    //   }
-    // }
+      const res = await axiosInstance.post(API_PATHS.RESUME.UPLOAD_RESUME_IMAGES + resumeId, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      console.log(res)
+      if (res.data) {
+        if (empty) {
+          personalInformation = { ...personalInformation, profileUrl: "", thumbnailUrl: res.data.personalInformation.thumbnailUrl }
+        } else {
+          personalInformation = { ...personalInformation, profileUrl: res.data.personalInformation.profileUrl, thumbnailUrl: res.data.personalInformation.thumbnailUrl }
+        }
+        toast.success('file uploaded successfully!')
+      } else {
+        toast.error('file couldnot be uploaded')
+      }
+    }
 
     const res = await axiosInstance.put(API_PATHS.RESUME.UPDATE_RESUME + resumeId, { ...resume, personalInformation })
     if (res.data) {
@@ -310,13 +312,24 @@ const ResumeBuilder = () => {
       }
     }))
   }
+
+  const deleteArrayElement = (mainProperty, index) => {
+    setResume(prev => {
+      const updatedArray = prev[mainProperty].filter((_, i) => i !== index);
+      return {
+        ...prev,
+        [mainProperty]: updatedArray
+      };
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className='md:px-20 px-2 py-5 flex flex-col gap-3'>
-        <TitleBox title={resume.title} handleString={handleString} open={setChangeTheme} id={resumeId} navigate={navigate} ref={thumbnailref}/>
+        <TitleBox title={resume.title} handleString={handleString} open={setChangeTheme} id={resumeId} navigate={navigate} ref={thumbnailref} />
         <div className='grid grid-cols-1 xl:grid-cols-2 gap-2'>
           <div className='w-full bg-white px-8 pt-6 pb-2 rounded-md border border-gray-300 relative overflow-hidden'>
-            <ProgressBar width={progress}/>
+            <ProgressBar width={progress} />
             {
               subpages[subpage] === 'profile-info' && <PersonalInformation handleInfoChange={(key, value) => {
                 handleObjects('personalInformation', key, value)
@@ -326,24 +339,36 @@ const ResumeBuilder = () => {
               subpages[subpage] === 'contact-info' && <ContactInfo contactInfo={resume.contactInformation} handleInfoChange={(key, value) => handleObjects('contactInformation', key, value)} />
             }
             {
-              subpages[subpage] === 'work-experience' && <WorkExperience workExperience={resume.workExperience} updateArray={(index, key, value) => updateArray("workExperience", index, key, value)} addElementInArray={objToadd => addElementInArray("workExperience", objToadd)} />
+              subpages[subpage] === 'work-experience' && <WorkExperience workExperience={resume.workExperience} updateArray={(index, key, value) => updateArray("workExperience", index, key, value)} addElementInArray={objToadd => addElementInArray("workExperience", objToadd)}
+                deleteArrayElement={(index) => deleteArrayElement("workExperience", index)}
+              />
             }
             {
               subpages[subpage] === 'education' && <Education education={resume.education} updateArray={(index, key, value) => {
                 updateArray('education', index, key, value);
-              }} addElementInArray={(objToadd) => addElementInArray('education', objToadd)} />
+              }} addElementInArray={(objToadd) => addElementInArray('education', objToadd)}
+                deleteArrayElement={(index) => deleteArrayElement("education", index)}
+              />
             }
             {
-              subpages[subpage] === 'skills' && <Skills skills={resume.skills} updateArray={(index, key, value) => updateArray('skills', index, key, value)} addElementInArray={objToadd => addElementInArray('skills', objToadd)} />
+              subpages[subpage] === 'skills' && <Skills skills={resume.skills} updateArray={(index, key, value) => updateArray('skills', index, key, value)} addElementInArray={objToadd => addElementInArray('skills', objToadd)}
+                deleteArrayElement={(index) => deleteArrayElement("skills", index)}
+              />
             }
             {
-              subpages[subpage] === 'projects' && <Projects projects={resume.projects} updateArray={(index, key, value) => updateArray('projects', index, key, value)} addElementInArray={objToadd => addElementInArray('projects', objToadd)} />
+              subpages[subpage] === 'projects' && <Projects projects={resume.projects} updateArray={(index, key, value) => updateArray('projects', index, key, value)} addElementInArray={objToadd => addElementInArray('projects', objToadd)}
+                deleteArrayElement={(index) => deleteArrayElement("projects", index)}
+              />
             }
             {
-              subpages[subpage] === 'certifications' && <Certifications certifications={resume.certifications} updateArray={(index, key, value) => updateArray('certifications', index, key, value)} addElementInArray={objToadd => addElementInArray('certifications', objToadd)} />
+              subpages[subpage] === 'certifications' && <Certifications certifications={resume.certifications} updateArray={(index, key, value) => updateArray('certifications', index, key, value)} addElementInArray={objToadd => addElementInArray('certifications', objToadd)}
+                deleteArrayElement={(index) => deleteArrayElement("certifications", index)}
+              />
             }
             {
-              subpages[subpage] === 'additional-info' && <AdditionalInfo additionalInfo={resume.additionalInfo} updateArray={updateArray} addElementInArray={addElementInArray} interests={resume.interests} />
+              subpages[subpage] === 'additional-info' && <AdditionalInfo additionalInfo={resume.additionalInfo} updateArray={updateArray} addElementInArray={addElementInArray} interests={resume.interests}
+                deleteArrayElement={deleteArrayElement}
+              />
             }
             {
               errors && errors.length > 0 && <p class="bg-red-50 text-red-700 border-l-4 border-red-600 p-4 rounded-md shadow-md text-sm font-medium animate-fade-in">
@@ -357,21 +382,21 @@ const ResumeBuilder = () => {
               <button className='resume-btn' onClick={() => handleMultiStepFrom('increase')}><span className='lg:block hidden'>Next</span></button>
             </div>
           </div>
-          <TemplateOne theme={resume.theme.colorPalette} resume={resume} preview={preview} thumbnailref={thumbnailref} template={template}/>
+          <TemplateOne theme={resume.theme.colorPalette} resume={resume} preview={preview} thumbnailref={thumbnailref} template={template} />
         </div>
       </div>
 
-      {/* {
+      {
         openModal && <Modal >
           <CreateResume open={setOpenModal} navigate={navigate} create={false} oldTitle={resume.title} handleString={handleString} />
         </Modal>
-      } */}
+      }
 
-      {/* {
+      {
         changeTheme && <Modal>
           <ThemeSelector open={setChangeTheme} handleTheme={handleTheme} templateId={template} setTemplate={setTemplate} palette={resume.theme.colorPalette} setIndex={setIndex} index={index} />
         </Modal>
-      } */}
+      }
 
 
     </DashboardLayout>
