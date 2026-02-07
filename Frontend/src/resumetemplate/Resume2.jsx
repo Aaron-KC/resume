@@ -14,6 +14,10 @@ import Projects from './Projects';
 import Skill from './Skill';
 
 const Resume = ({ theme, resume, preview, thumbnailref }) => {
+
+  // Helper to check if an array of objects has at least one real value
+  const hasContent = (arr, key) => arr && arr.some(item => item[key] && item[key].trim() !== "");
+
   return (
     <div className='w-full bg-white print-container' ref={thumbnailref}>
       {/* Header Section */}
@@ -38,6 +42,7 @@ const Resume = ({ theme, resume, preview, thumbnailref }) => {
               {resume.contactInformation.email && <Contact description={resume.contactInformation.email} icon={<CiMail />} bgColor={theme[2]} />}
             </div>
           </div>
+          {/* Contact rows */}
           <div className='w-full flex justify-between'>
             {resume.contactInformation.address && <Contact description={resume.contactInformation.address} icon={<MdOutlineLocationOn />} bgColor={theme[2]} />}
             {resume.contactInformation.phoneNumber && <Contact description={resume.contactInformation.phoneNumber} icon={<MdOutlinePhone />} bgColor={theme[2]} />}
@@ -52,44 +57,44 @@ const Resume = ({ theme, resume, preview, thumbnailref }) => {
 
       <div className='px-4 flex flex-col gap-y-3 w-full py-8'>
         {/* Professional Summary */}
-        {resume.personalInformation.summary && (
+        {resume.personalInformation.summary && resume.personalInformation.summary.trim() !== "" && (
           <div>
             <Title text={'Professional Summary'} color={theme[1]} />
             <p className='text-xs font-medium'>{resume.personalInformation.summary}</p>
           </div>
         )}
 
-        {/* Work Experience */}
-        {resume.workExperience.length > 0 && (
+        {/* Work Experience - Checks if company name exists */}
+        {hasContent(resume.workExperience, 'company') && (
           <div>
             <Title text={'Work Experience'} color={theme[1]} />
-            {resume.workExperience.map((exp, index) => <WorkExperience experience={exp} key={exp._id || index} />)}
+            {resume.workExperience.filter(exp => exp.company).map((exp, index) => <WorkExperience experience={exp} key={exp._id || index} />)}
           </div>
         )}
 
-        {/* Projects */}
-        {resume.projects.length > 0 && (
+        {/* Projects - Checks if title exists */}
+        {hasContent(resume.projects, 'title') && (
           <div>
             <Title text={'Projects'} color={theme[1]} />
-            {resume.projects.map((project, index) => <Projects project={project} key={project._id || index} color={theme[2]} />)}
+            {resume.projects.filter(p => p.title).map((project, index) => <Projects project={project} key={project._id || index} color={theme[2]} />)}
           </div>
         )}
 
-        {/* Skills */}
-        {resume.skills.length > 0 && (
+        {/* Skills - Checks if skill name exists */}
+        {hasContent(resume.skills, 'name') && (
           <div>
             <Title text={'Skills'} color={theme[1]} />
             <div className='grid grid-cols-2'>
-              {resume.skills.map((skill, index) => <Skill skill={skill} key={skill._id || index} unselect={theme[2]} select={theme[3]} />)}
+              {resume.skills.filter(s => s.name).map((skill, index) => <Skill skill={skill} key={skill._id || index} unselect={theme[2]} select={theme[3]} />)}
             </div>
           </div>
         )}
 
-        {/* Certifications */}
-        {resume.certifications.length > 0 && (
+        {/* Certifications - Checks if title exists */}
+        {hasContent(resume.certifications, 'title') && (
           <div>
             <Title text={'Certifications'} color={theme[1]} />
-            {resume.certifications.map((certificate, index) => (
+            {resume.certifications.filter(c => c.title).map((certificate, index) => (
               <div className='flex flex-col gap-1 text-xs mb-2' key={certificate._id || index}>
                 <p className='font-bold'>{certificate.title}</p>
                 <div className='flex gap-2 items-center'>
@@ -101,31 +106,31 @@ const Resume = ({ theme, resume, preview, thumbnailref }) => {
           </div>
         )}
 
-        {/* Interests */}
-        {resume.interests.length > 0 && (
+        {/* Interests - Checks if array has actual strings */}
+        {resume.interests && resume.interests.length > 0 && resume.interests.some(i => i.trim() !== "") && (
           <div>
             <Title text={'Interests'} color={theme[1]} />
             <div className='flex gap-1 flex-wrap'>
-              {resume.interests.map((interest, index) => (
+              {resume.interests.filter(i => i.trim() !== "").map((interest, index) => (
                 <div key={index} className='py-1 px-2 rounded-md text-xs font-medium' style={{ backgroundColor: theme[2] }}>{interest}</div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Education */}
-        {resume.education.length > 0 && (
+        {/* Education - Checks if institution exists */}
+        {hasContent(resume.education, 'institution') && (
           <div className='w-full'>
             <Title text={'Education'} color={theme[1]} />
-            {resume.education.map((education, index) => <Education education={education} key={education._id || index} />)}
+            {resume.education.filter(edu => edu.institution).map((education, index) => <Education education={education} key={education._id || index} />)}
           </div>
         )}
 
-        {/* Languages */}
-        {resume.additionalInfo.length > 0 && (
+        {/* Languages - Checks if language name exists */}
+        {hasContent(resume.additionalInfo, 'language') && (
           <div className='w-full'>
             <Title text={'Languages'} color={theme[1]} />
-            {resume.additionalInfo.map((info, index) => <Language info={info} key={info._id || index} unselect={theme[2]} select={theme[3]} />)}
+            {resume.additionalInfo.filter(l => l.language).map((info, index) => <Language info={info} key={info._id || index} unselect={theme[2]} select={theme[3]} />)}
           </div>
         )}
       </div>

@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import Input from './Input'
-import { LuTrash, LuUser } from "react-icons/lu";
-import { LuUpload } from "react-icons/lu";
 import { axiosInstance } from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths';
 import { validateCredentials } from '../../utils/validateCredentials';
@@ -16,6 +14,7 @@ const SignUp = ({ open, mode }) => {
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState('');
   const [err, setErr] = useState(null);
+  const [successMsg, setSuccessMsg] = useState("");
 
   const handleChange = e => {
     setReg({ ...reg, [e.target.name]: e.target.value })
@@ -36,12 +35,12 @@ const SignUp = ({ open, mode }) => {
   const handleSignUp = async () => {
     try {
 
-     const result =  validateCredentials(reg.email, reg.password);
+      const result = validateCredentials(reg.email, reg.password);
 
-     if(!result.isEmailValid || !result.isPasswordStrong) {
-      setErr(result.message)
-      return;
-     }
+      if (!result.isEmailValid || !result.isPasswordStrong) {
+        setErr(result.message)
+        return;
+      }
       const formData = new FormData();
 
       for (let key in reg) {
@@ -55,7 +54,7 @@ const SignUp = ({ open, mode }) => {
 
       if (res.data) {
         toast.success(res.data.message)
-        mode('login')
+        setSuccessMsg("A verification email has been sent to your inbox. Please verify to continue.");
       }
     } catch (err) {
       console.log(err)
@@ -78,7 +77,7 @@ const SignUp = ({ open, mode }) => {
       <p className='font-bold text-xl'>Create an Account</p>
       <p className='text-sm font-normal pt-1 pb-2'>Join us today by entering your details below</p>
       <div className='w-full flex justify-center py-3'>
-        <ProfileImage preview={preview} deleteImage={deleteImage} handleImage={handleImage} image={image}/>
+        <ProfileImage preview={preview} deleteImage={deleteImage} handleImage={handleImage} image={image} />
       </div>
       <Input label={'Full Name'} placeholder={'John'} name={'name'} value={reg.name} handleChange={handleChange} />
       <Input label={'Email Address'} placeholder={'john@example.com'} name={'email'} value={reg.email} handleChange={handleChange} />
@@ -89,6 +88,7 @@ const SignUp = ({ open, mode }) => {
       <button className='btn2 w-full' style={{ margin: '10px 0' }} onClick={handleSignUp}>SIGN UP</button>
       <p className='text-sm'>Already have an account? <span className='text-purple-400 underline cursor-pointer' onClick={() => mode('login')}>Login</span></p>
       <RxCross1 className='absolute top-5 right-6 cursor-pointer' onClick={() => open(false)} />
+      <span>{successMsg}</span>
     </>
   )
 }
